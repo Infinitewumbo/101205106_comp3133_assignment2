@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { EmployeeList } from './components/employee-list/employee-list';
 import { Signup } from './components/signup/signup';
 import { Login } from './components/login/login';
+import { AddEmployee } from './components/add-employee/add-employee';
 import { authGuard } from './auth/auth-guard';
 
 export const routes: Routes = [
@@ -12,5 +13,6 @@ export const routes: Routes = [
     component: EmployeeList,
     canActivate: [authGuard]
    },
+  { path: 'add-employee', component: AddEmployee, canActivate: [authGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' } 
 ];
