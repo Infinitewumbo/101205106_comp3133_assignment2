@@ -1,4 +1,27 @@
 <div class="container mt-4">
   <h2>Employee List</h2>
-  <p>If you see this, routing is working!</p>
+  <table class="table table-striped table-bordered mt-3">
+    <thead class="table-dark">
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (emp of employees; track emp.id) {
+        <tr>
+          <td>{{ emp.first_name }}</td>
+          <td>{{ emp.last_name }}</td>
+          <td>{{ emp.email }}</td>
+          <td>
+            <button class="btn btn-info btn-sm">View</button>
+            <button class="btn btn-warning btn-sm mx-1">Update</button>
+            <button class="btn btn-danger btn-sm">Delete</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
