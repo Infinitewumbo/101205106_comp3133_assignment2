@@ -1,1 +1,14 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="#">Employee Manager</a>
+    <div class="navbar-nav">
+      <a class="nav-link" routerLink="/employees">Employee List</a>
+      <a class="nav-link" routerLink="/add-employee">Add Employee</a>
+    </div>
+    <div class="ms-auto">
+      <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
 <router-outlet></router-outlet>
