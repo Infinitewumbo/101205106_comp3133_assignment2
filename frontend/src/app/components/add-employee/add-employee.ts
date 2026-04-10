@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
-import { ADD_EMPLOYEE } from '../../graphql.operations';
+import { ADD_EMPLOYEE, GET_ALL_EMPLOYEES } from '../../graphql.operations'; 
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -22,7 +22,7 @@ export class AddEmployee {
     department: new FormControl('', [Validators.required]),
     date_of_joining: new FormControl('', [Validators.required]),
     employee_photo: new FormControl('') 
-});
+  });
 
   constructor(private apollo: Apollo, private router: Router) {}
 
@@ -30,13 +30,19 @@ export class AddEmployee {
     if (this.employeeForm.valid) {
       this.apollo.mutate({
         mutation: ADD_EMPLOYEE,
-        variables: this.employeeForm.value
+        variables: this.employeeForm.value,
+        refetchQueries: [{
+          query: GET_ALL_EMPLOYEES
+        }]
       }).subscribe({
         next: (result) => {
           console.log('Employee Added:', result);
           this.router.navigate(['/employees']); 
         },
-        error: (err) => alert('Error adding employee: ' + err.message)
+        error: (err) => {
+          console.error('Mutation error:', err);
+          alert('Error adding employee: ' + err.message);
+        }
       });
     }
   }
