@@ -13,6 +13,10 @@ export class App {
 
   constructor(private router: Router) {} 
 
+  get showNavbar(): boolean {
+    return !['/login', '/signup', '/'].includes(this.router.url);
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

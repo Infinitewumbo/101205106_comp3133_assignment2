@@ -1,51 +1,47 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-body p-4">
-          <h3 class="card-title text-center mb-4">Login</h3>
-          
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input 
-                type="text" 
-                id="username"
-                formControlName="username" 
-                class="form-control"
-                placeholder="Enter username"
-              >
-            </div>
+<section class="auth-shell">
+  <div class="card auth-card border-0">
+    <div class="card-body p-4 p-md-5">
+      <h2 class="auth-title mb-1">Welcome Back</h2>
+      <p class="auth-subtitle">Sign in to manage employee records securely.</p>
 
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input 
-                type="password" 
-                id="password"
-                formControlName="password" 
-                class="form-control"
-                placeholder="Enter password"
-              >
-            </div>
-
-            <button 
-              type="submit" 
-              [disabled]="!loginForm.valid" 
-              class="btn btn-primary w-100 mt-2"
-            >
-              Sign In
-            </button>
-
-            <div class="mt-4 text-center">
-              <small class="text-muted">
-                Don't have an account? 
-                <a routerLink="/signup" class="text-decoration-none">Signup here</a>
-              </small>
-            </div>
-          </form>
-          
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="username" class="form-label fw-semibold">Username</label>
+          <input 
+            type="text" 
+            id="username"
+            formControlName="username" 
+            class="form-control form-control-lg"
+            placeholder="Enter username"
+          >
         </div>
-      </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label fw-semibold">Password</label>
+          <input 
+            type="password" 
+            id="password"
+            formControlName="password" 
+            class="form-control form-control-lg"
+            placeholder="Enter password"
+          >
+        </div>
+
+        <button 
+          type="submit" 
+          [disabled]="!loginForm.valid" 
+          class="btn btn-primary w-100 py-2"
+        >
+          Sign In
+        </button>
+
+        <div class="mt-4 text-center">
+          <small class="text-muted">
+            Don't have an account?
+            <a routerLink="/signup" class="fw-semibold text-decoration-none">Create one</a>
+          </small>
+        </div>
+      </form>
     </div>
   </div>
-</div>
+</section>

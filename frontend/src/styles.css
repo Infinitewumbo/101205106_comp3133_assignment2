@@ -1,1 +1,177 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+	--brand-900: #11284f;
+	--brand-700: #1f4f95;
+	--brand-500: #2f6fd3;
+	--brand-100: #e8f0ff;
+	--text-900: #192437;
+	--text-700: #4d5d79;
+	--surface-0: #ffffff;
+	--surface-50: #f7f9fd;
+	--border-200: #dce3ef;
+	--success-500: #1f8f58;
+	--danger-500: #c63a3a;
+	--warning-500: #d48806;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: 'Manrope', sans-serif;
+	color: var(--text-900);
+	background:
+		radial-gradient(circle at 10% 0%, rgba(47, 111, 211, 0.18), transparent 35%),
+		radial-gradient(circle at 90% 100%, rgba(17, 40, 79, 0.16), transparent 45%),
+		linear-gradient(180deg, #f4f7ff 0%, #eef3fb 100%);
+}
+
+app-root {
+	display: block;
+	min-height: 100vh;
+}
+
+.page-shell {
+	padding: 1.5rem 0 2rem;
+	animation: fadeSlideIn 0.35s ease;
+}
+
+.card {
+	border: 1px solid var(--border-200);
+	border-radius: 1rem;
+	box-shadow: 0 20px 40px rgba(17, 40, 79, 0.08) !important;
+}
+
+.card-header {
+	border-top-left-radius: 1rem !important;
+	border-top-right-radius: 1rem !important;
+}
+
+.btn {
+	border-radius: 0.7rem;
+	font-weight: 600;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+}
+
+.btn-primary {
+	background-color: var(--brand-500);
+	border-color: var(--brand-500);
+	box-shadow: 0 8px 16px rgba(47, 111, 211, 0.26);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+	background-color: var(--brand-700);
+	border-color: var(--brand-700);
+}
+
+.btn-success {
+	background-color: var(--success-500);
+	border-color: var(--success-500);
+}
+
+.btn-outline-secondary {
+	border-color: #a8b4c8;
+	color: #4d5d79;
+}
+
+.form-control,
+.form-select,
+.input-group-text {
+	border-radius: 0.65rem;
+	border-color: var(--border-200);
+}
+
+.form-control:focus,
+.form-select:focus {
+	border-color: var(--brand-500);
+	box-shadow: 0 0 0 0.2rem rgba(47, 111, 211, 0.18);
+}
+
+.form-label {
+	color: var(--text-700);
+}
+
+.table {
+	--bs-table-bg: transparent;
+}
+
+.table thead th {
+	border-bottom: none;
+	background-color: var(--brand-900) !important;
+	color: #f5f8ff;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+}
+
+.table tbody td {
+	border-color: #e8edf5;
+}
+
+.table tbody tr:hover {
+	background-color: #f8fbff;
+}
+
+.badge {
+	font-weight: 600;
+	border-radius: 999px;
+	padding: 0.45rem 0.7rem;
+}
+
+.auth-shell {
+	min-height: calc(100vh - 90px);
+	display: grid;
+	place-items: center;
+	padding: 2rem 1rem;
+}
+
+.auth-card {
+	width: 100%;
+	max-width: 430px;
+}
+
+.auth-title {
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.auth-subtitle {
+	color: var(--text-700);
+	margin-bottom: 1.25rem;
+}
+
+@keyframes fadeSlideIn {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 768px) {
+	.page-shell {
+		padding: 1rem 0 1.5rem;
+	}
+
+	.card {
+		border-radius: 0.8rem;
+	}
+
+	.card-header {
+		border-top-left-radius: 0.8rem !important;
+		border-top-right-radius: 0.8rem !important;
+	}
+}

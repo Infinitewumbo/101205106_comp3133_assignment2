@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
+import { GET_EMPLOYEE_BY_ID, UPDATE_EMPLOYEE, GET_ALL_EMPLOYEES } from '../../graphql.operations';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { GET_EMPLOYEE_BY_ID, UPDATE_EMPLOYEE } from '../../graphql.operations';
 
 @Component({
   selector: 'app-update-employee',
@@ -12,28 +12,31 @@ import { GET_EMPLOYEE_BY_ID, UPDATE_EMPLOYEE } from '../../graphql.operations';
   templateUrl: './update-employee.html'
 })
 export class UpdateEmployee implements OnInit {
-  eid: string = '';
-  employeeForm = new FormGroup({
+  id: string = '';
+  submitted = false;
+  employeeName: string = 'Employee'; // Default name
+
+  updateForm = new FormGroup({
     first_name: new FormControl('', [Validators.required]),
     last_name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    gender: new FormControl('Male'),
+    gender: new FormControl('Male', [Validators.required]),
     designation: new FormControl('', [Validators.required]),
-    salary: new FormControl(0, [Validators.required]),
+    salary: new FormControl(0, [Validators.required, Validators.min(1)]),
     department: new FormControl('', [Validators.required]),
     date_of_joining: new FormControl('', [Validators.required]),
-    employee_photo: new FormControl('')
+    employee_photo: new FormControl('') 
   });
 
   constructor(
-    private apollo: Apollo,
-    private route: ActivatedRoute,
-    private router: Router
+    private apollo: Apollo, 
+    private router: Router, 
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.eid = this.route.snapshot.params['id'];
-    if (this.eid) {
+    this.id = this.route.snapshot.paramMap.get('id') || '';
+    if (this.id) {
       this.loadEmployeeData();
     }
   }
@@ -41,54 +44,62 @@ export class UpdateEmployee implements OnInit {
   loadEmployeeData() {
     this.apollo.query({
       query: GET_EMPLOYEE_BY_ID,
-      variables: { eid: this.eid },
-      fetchPolicy: 'network-only' // Always get fresh data
+      variables: { eid: this.id },
+      fetchPolicy: 'no-cache'
     }).subscribe({
-      next: (result: any) => {
-        const emp = result?.data?.searchEmployeeById;
+      next: ({ data }: any) => {
+        const emp = data?.searchEmployeeById;
+        
         if (emp) {
-          // Remove __typename if it exists to prevent form errors
-          const { __typename, id, ...cleanData } = emp;
-          this.employeeForm.patchValue(cleanData);
+          this.employeeName = `${emp.first_name} ${emp.last_name}`;
+          
+          let formattedDate = '';
+          if (emp.date_of_joining) {
+            formattedDate = new Date(emp.date_of_joining).toISOString().split('T')[0];
+          }
+
+          this.updateForm.patchValue({
+            first_name: emp.first_name,
+            last_name: emp.last_name,
+            email: emp.email,
+            gender: emp.gender,
+            designation: emp.designation,
+            salary: emp.salary,
+            department: emp.department,
+            date_of_joining: formattedDate,
+            employee_photo: emp.employee_photo
+          });
         }
       },
-      error: (err) => console.error("Error fetching employee:", err)
+      error: (err) => {
+        console.error("GraphQL Error:", err);
+        alert("Could not find employee data.");
+      }
     });
   }
 
+  getErrorMessage(controlName: string): string {
+    const control = this.updateForm.get(controlName);
+    if (control && control.invalid && (control.touched || this.submitted)) {
+      if (control.errors?.['required']) return 'Required';
+      if (control.errors?.['email']) return 'Invalid email';
+    }
+    return '';
+  }
+
   onSubmit() {
-    if (this.employeeForm.valid && this.eid) {
-      const rawValues = this.employeeForm.getRawValue();
-      
-      // Send all employee fields for update
-      const variables = {
-        eid: this.eid,
-        first_name: rawValues.first_name,
-        last_name: rawValues.last_name,
-        email: rawValues.email,
-        gender: rawValues.gender,
-        date_of_joining: rawValues.date_of_joining,
-        salary: parseFloat(rawValues.salary?.toString() ?? '0'),
-        designation: rawValues.designation,
-        department: rawValues.department,
-        employee_photo: rawValues.employee_photo
-      };
-
-      console.log("Sending variables:", variables);
-
+    this.submitted = true;
+    if (this.updateForm.valid) {
       this.apollo.mutate({
         mutation: UPDATE_EMPLOYEE,
-        variables: variables
+        variables: { eid: this.id, ...this.updateForm.value },
+        refetchQueries: [{ query: GET_ALL_EMPLOYEES }]
       }).subscribe({
-        next: (result) => {
-          alert('Update Successful!');
-          this.router.navigate(['/employees']);
-        },
-        error: (err) => {
-          console.error("Mutation Error:", err);
-          alert("Update failed. Check console.");
-        }
+        next: () => this.router.navigate(['/employees']),
+        error: (err) => alert('Update failed: ' + err.message)
       });
+    } else {
+      this.updateForm.markAllAsTouched();
     }
-}
+  }
 }

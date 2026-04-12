@@ -1,0 +1,94 @@
+.app-layout {
+	min-height: 100vh;
+	display: grid;
+	grid-template-columns: 260px minmax(0, 1fr);
+}
+
+.app-layout-auth {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.app-sidebar {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	gap: 1.4rem;
+	padding: 1.4rem 1rem;
+	background: linear-gradient(170deg, #11284f, #1f4f95);
+	border-right: 1px solid rgba(255, 255, 255, 0.16);
+	box-shadow: 10px 0 24px rgba(15, 30, 58, 0.22);
+}
+
+.app-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.65rem;
+	color: #ffffff;
+	font-weight: 800;
+	letter-spacing: 0.01em;
+	text-decoration: none;
+	margin-bottom: 0.35rem;
+}
+
+.brand-mark {
+	width: 34px;
+	height: 34px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.65rem;
+	color: #1f4f95;
+	background: #ffffff;
+	font-size: 0.85rem;
+	font-weight: 800;
+}
+
+.app-sidebar-nav {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+.app-nav-link {
+	color: rgba(255, 255, 255, 0.88);
+	font-weight: 600;
+	border-radius: 0.6rem;
+	padding: 0.65rem 0.8rem;
+	text-decoration: none;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.app-nav-link:hover,
+.app-nav-link.active {
+	color: #ffffff;
+	background: rgba(255, 255, 255, 0.16);
+}
+
+.app-logout {
+	margin-top: auto;
+	width: 100%;
+}
+
+.page-shell {
+	min-width: 0;
+}
+
+.page-shell-auth {
+	max-width: none;
+}
+
+@media (max-width: 992px) {
+	.app-layout {
+		display: block;
+	}
+
+	.app-sidebar {
+		position: static;
+		height: auto;
+		box-shadow: 0 8px 20px rgba(15, 30, 58, 0.22);
+		border-right: none;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+	}
+}

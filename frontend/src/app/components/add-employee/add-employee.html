@@ -1,63 +1,89 @@
-<div class="container mt-4">
-  <div class="card shadow">
-    <div class="card-header bg-primary text-white">
-      <h3>Add New Employee</h3>
+<div class="container mt-3 mt-md-4 mb-4">
+  <div class="card shadow border-0 mx-auto" style="max-width: 800px;">
+    <div class="card-header bg-primary text-white py-3">
+      <h3 class="mb-1">Add New Employee</h3>
     </div>
-    <div class="card-body">
+    
+    <div class="card-body p-4">
+      <div *ngIf="submitted && employeeForm.invalid" class="alert alert-danger border-0 mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Please correct the errors in the form before submitting.
+      </div>
+
       <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">First Name</label>
-            <input type="text" formControlName="first_name" class="form-control">
+            <label class="form-label fw-bold">First Name</label>
+            <input type="text" formControlName="first_name" class="form-control"
+              [class.is-invalid]="getErrorMessage('first_name')">
+            <div class="invalid-feedback">{{ getErrorMessage('first_name') }}</div>
           </div>
+
           <div class="col-md-6 mb-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" formControlName="last_name" class="form-control">
+            <label class="form-label fw-bold">Last Name</label>
+            <input type="text" formControlName="last_name" class="form-control"
+              [class.is-invalid]="getErrorMessage('last_name')">
+            <div class="invalid-feedback">{{ getErrorMessage('last_name') }}</div>
           </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Email Address</label>
+          <input type="email" formControlName="email" class="form-control"
+            [class.is-invalid]="getErrorMessage('email')">
+          <div class="invalid-feedback">{{ getErrorMessage('email') }}</div>
         </div>
 
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" formControlName="email" class="form-control">
+            <label class="form-label fw-bold">Designation</label>
+            <input type="text" formControlName="designation" class="form-control"
+              [class.is-invalid]="getErrorMessage('designation')">
+            <div class="invalid-feedback">{{ getErrorMessage('designation') }}</div>
           </div>
+
           <div class="col-md-6 mb-3">
-            <label class="form-label">Salary</label>
-            <input type="number" formControlName="salary" class="form-control">
+            <label class="form-label fw-bold">Department</label>
+            <input type="text" formControlName="department" class="form-control"
+              [class.is-invalid]="getErrorMessage('department')">
+            <div class="invalid-feedback">{{ getErrorMessage('department') }}</div>
           </div>
         </div>
 
         <div class="row">
           <div class="col-md-4 mb-3">
-            <label class="form-label">Department</label>
-            <input type="text" formControlName="department" class="form-control">
+            <label class="form-label fw-bold">Salary</label>
+            <input type="number" formControlName="salary" class="form-control"
+              [class.is-invalid]="getErrorMessage('salary')">
+            <div class="invalid-feedback">{{ getErrorMessage('salary') }}</div>
           </div>
+
           <div class="col-md-4 mb-3">
-            <label class="form-label">Designation</label>
-            <input type="text" formControlName="designation" class="form-control">
+            <label class="form-label fw-bold">Gender</label>
+            <select formControlName="gender" class="form-select">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
+
           <div class="col-md-4 mb-3">
-            <label class="form-label">Date of Joining</label>
-            <input type="date" formControlName="date_of_joining" class="form-control">
+            <label class="form-label fw-bold">Date of Joining</label>
+            <input type="date" formControlName="date_of_joining" class="form-control"
+              [class.is-invalid]="getErrorMessage('date_of_joining')">
+            <div class="invalid-feedback">{{ getErrorMessage('date_of_joining') }}</div>
           </div>
         </div>
 
-          <div class="mb-3">
+        <div class="mb-4">
           <label class="form-label fw-bold">Employee Photo URL</label>
-          <input 
-            type="text" 
-            formControlName="employee_photo" 
-            class="form-control" 
-            placeholder="https://example.com/photo.jpg"
-          >
-          <div class="form-text text-muted">
-            Paste an image link from the web to display a profile picture.
-          </div>
+          <input type="text" formControlName="employee_photo" class="form-control" 
+            placeholder="Paste image link here...">
         </div>
 
-        <div class="d-flex justify-content-end gap-2 mt-3">
-          <button type="button" class="btn btn-secondary" routerLink="/employees">Cancel</button>
-          <button type="submit" [disabled]="!employeeForm.valid" class="btn btn-success">Save Employee</button>
+        <div class="d-flex justify-content-between mt-3">
+          <button type="button" class="btn btn-outline-secondary px-4" routerLink="/employees">Cancel</button>
+          <button type="submit" class="btn btn-primary px-5 shadow-sm">Create Employee</button>
         </div>
       </form>
     </div>

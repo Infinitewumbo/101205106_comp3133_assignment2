@@ -1,14 +1,19 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-  <div class="container">
-    <a class="navbar-brand" href="#">Employee Manager</a>
-    <div class="navbar-nav">
-      <a class="nav-link" routerLink="/employees">Employee List</a>
-      <a class="nav-link" routerLink="/add-employee">Add Employee</a>
-    </div>
-    <div class="ms-auto">
-      <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
-    </div>
-  </div>
-</nav>
+<div class="app-layout" [class.app-layout-auth]="!showNavbar">
+  <aside class="app-sidebar" [class.d-none]="!showNavbar">
+    <a class="app-brand" routerLink="/employees">
+      <span class="brand-mark">EM</span>
+      <span>Employee Manager</span>
+    </a>
 
-<router-outlet></router-outlet>
+    <nav class="app-sidebar-nav">
+      <a class="app-nav-link" routerLink="/employees">Employee List</a>
+      <a class="app-nav-link" routerLink="/add-employee">Add Employee</a>
+    </nav>
+
+    <button class="btn btn-sm btn-light px-3 app-logout" (click)="logout()">Logout</button>
+  </aside>
+
+  <main class="page-shell" [class.page-shell-auth]="!showNavbar">
+    <router-outlet></router-outlet>
+  </main>
+</div>
