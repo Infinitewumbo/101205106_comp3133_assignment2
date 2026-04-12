@@ -9,34 +9,42 @@ const { json } = require('body-parser');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 
-async function startServer() {
-    const app = express();
-    
-    const server = new ApolloServer({
-        typeDefs,
-        resolvers,
-    });
+const app = express();
 
-    await server.start();
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+});
 
-    app.use(
-        '/graphql',
-        cors(),
-        json(),
-        expressMiddleware(server, {
-            context: async ({ req }) => ({ req }),
-        }),
-    );
-
-    const PORT = process.env.PORT || 4000;
-    
-    mongoose.connect(process.env.MONGODB_URI)
-      .then(() => console.log("✅ MongoDB Connected"))
-      .catch(err => console.error(err));
-
-    app.listen(PORT, () => {
-        console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
-    });
+let serverStarted = false;
+async function prepareServer() {
+    if (!serverStarted) {
+        await server.start();
+        serverStarted = true;
+    }
 }
 
-startServer();
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch(err => console.error("❌ MongoDB Error:", err));
+
+app.use(
+    '/graphql',
+    cors(),
+    json(),
+    async (req, res, next) => {
+        await prepareServer(); 
+        return expressMiddleware(server, {
+            context: async ({ req }) => ({ req }),
+        })(req, res, next);
+    }
+);
+
+module.exports = app; 
+
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Local Server ready at http://localhost:${PORT}/graphql`);
+    });
+}
