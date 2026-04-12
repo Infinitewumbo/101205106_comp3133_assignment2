@@ -26,12 +26,20 @@ async function prepareServer() {
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("✅ MongoDB Connected"))
-    .catch(err => console.error("❌ MongoDB Error:", err));
+    .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+const corsOptions = {
+    origin: 'https://101205106-comp3133-assignment2-fron.vercel.app',
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.use(json());
 
 app.use(
     '/graphql',
-    cors(),
-    json(),
     async (req, res, next) => {
         await prepareServer(); 
         return expressMiddleware(server, {
