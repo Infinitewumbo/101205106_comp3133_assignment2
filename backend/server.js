@@ -3,7 +3,7 @@ const express = require('express');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@as-integrations/express5');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const cors = require('cors'); 
 const { json } = require('body-parser');
 
 const typeDefs = require('./graphql/typeDefs');
@@ -14,6 +14,7 @@ const app = express();
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    introspection: true, 
 });
 
 let serverStarted = false;
@@ -28,14 +29,17 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-const corsOptions = {
-    origin: 'https://101205106-comp3133-assignment2-fron.vercel.app',
-    credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-};
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://101205106-comp3133-assignment2-fron.vercel.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization, Apollo-Require-Preflight');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204); 
+    }
+    next();
+});
 
-app.use(cors(corsOptions));
 app.use(json());
 
 app.use(
