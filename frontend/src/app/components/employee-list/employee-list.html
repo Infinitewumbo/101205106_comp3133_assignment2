@@ -1,69 +1,104 @@
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Employee List</h2>
-    <button class="btn btn-primary" routerLink="/add-employee">
-      <i class="bi bi-plus-circle"></i> Add New Employee
-    </button>
-  </div>
-
-  <div class="mb-4">
-    <div class="input-group shadow-sm">
-      <span class="input-group-text bg-dark text-white">
-        <i class="bi bi-search"></i>
-      </span>
-      <input 
-        type="text" 
-        class="form-control" 
-        placeholder="Filter by Department or Designation (e.g. 'Cyber' or 'Security')..." 
-        [(ngModel)]="searchTerm"
-      >
-    </div>
-    <div class="form-text text-muted" *ngIf="searchTerm">
-      Showing results for: <strong>{{ searchTerm }}</strong>
+<div class="container-fluid px-md-5 mt-4">
+  <div class="card shadow-sm mb-4 border-0 bg-white">
+    <div class="card-body d-flex justify-content-between align-items-center py-3">
+      <h2 class="h3 mb-0 text-primary fw-bold">
+        Employee Manager
+      </h2>
+      <button class="btn btn-primary px-4 shadow-sm fw-medium" routerLink="/add-employee">
+        Add New Employee
+      </button>
     </div>
   </div>
 
-  <div class="card shadow">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
-        <thead class="table-light">
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Designation</th> <th>Department</th>  <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let employee of filteredEmployees">
-            <td>{{ employee.first_name }}</td>
-            <td>{{ employee.last_name }}</td>
-            <td>{{ employee.email }}</td>
-            <td>
-              <span class="badge bg-info text-dark">{{ employee.designation }}</span>
-            </td>
-            <td>{{ employee.department }}</td> <td class="text-center">
-              <div class="btn-group">
-                <button class="btn btn-outline-primary btn-sm" [routerLink]="['/view-employee', employee.id]">
-                  View
-                </button>
-                <button class="btn btn-outline-warning btn-sm" [routerLink]="['/update-employee', employee.id]">
-                  Update
-                </button>
-                <button class="btn btn-outline-danger btn-sm" (click)="deleteEmployee(employee.id)">
-                  Delete
-                </button>
-              </div>
-            </td>
-          </tr>
-          
-          <tr *ngIf="filteredEmployees.length === 0">
-            <td colspan="6" class="text-center py-4 text-muted">
-              No employees found matching "{{ searchTerm }}"
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="card shadow-sm mb-4 border-0">
+    <div class="card-body bg-light rounded">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0 text-muted">
+          Search
+        </span>
+        <input 
+          type="text" 
+          class="form-control border-start-0 ps-0" 
+          placeholder="Filter by Department or Position (e.g. 'Cyber' or 'Security')..." 
+          [(ngModel)]="searchTerm"
+        >
+      </div>
+      <div class="form-text text-muted ps-1 mt-2" *ngIf="searchTerm">
+        Filtering for: <span class="badge bg-info text-dark">{{ searchTerm }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 bg-white mb-5">
+    <div class="card-body p-0">
+      
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 text-muted">Fetching employees...</p>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger mx-4 mt-4" role="alert">
+        {{ error }}
+      </div>
+
+      <div class="table-responsive" *ngIf="!loading && !error">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th class="ps-4">Photo</th> <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Designation</th>
+              <th>Department</th>
+              <th class="text-center pe-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let employee of filteredEmployees">
+              <td class="ps-4">
+                <img 
+                  [src]="employee.employee_photo || 'https://via.placeholder.com/40'" 
+                  class="rounded-circle border shadow-sm" 
+                  style="width: 40px; height: 40px; object-fit: cover;"
+                  onerror="this.src='https://via.placeholder.com/40'"
+                >
+              </td>
+              <td class="fw-bold">{{ employee.first_name }}</td>
+              <td>{{ employee.last_name }}</td>
+              <td class="text-muted small">{{ employee.email }}</td>
+              <td>
+                <span class="badge bg-secondary">{{ employee.designation }}</span>
+              </td>
+              <td>{{ employee.department }}</td>
+              <td class="text-center pe-4">
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-primary" [routerLink]="['/view-employee', employee.id]">
+                    View
+                  </button>
+                  <button class="btn btn-outline-warning" [routerLink]="['/update-employee', employee.id]">
+                    Update
+                  </button>
+                  <button class="btn btn-outline-danger" (click)="deleteEmployee(employee.id)">
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="filteredEmployees.length === 0 && searchTerm">
+              <td colspan="7" class="text-center py-5 text-muted">
+                No employees found matching "{{ searchTerm }}"
+              </td>
+            </tr>
+
+            <tr *ngIf="!loading && employees.length === 0 && !searchTerm">
+              <td colspan="7" class="text-center py-5 text-muted">
+                No employee records found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

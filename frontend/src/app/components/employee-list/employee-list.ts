@@ -13,75 +13,62 @@ import { FormsModule } from '@angular/forms';
 })
 export class EmployeeList implements OnInit {
   employees: any[] = [];
+  searchTerm: string = '';
+  loading: boolean = true; 
+  error: string | null = null; 
 
   constructor(
     private employeeService: EmployeeService,
     private cdr: ChangeDetectorRef 
   ) {}
 
-  searchTerm: string = '';
-
   get filteredEmployees() {
-  return this.employees.filter(emp => 
-    emp.designation.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-    emp.department.toLowerCase().includes(this.searchTerm.toLowerCase())
-  );
-}
+    return this.employees.filter(emp => 
+      emp.designation?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      emp.department?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
 
-ngOnInit(): void {
-  this.employeeService.getEmployees().subscribe({
-    next: (result: any) => {
-      const employees = result?.data?.getAllEmployees;
-      
-      if (employees) {
-        console.log('Data arrived in TS:', employees);
-        this.employees = [...employees];
-      } else {
-        console.warn('No data returned from server. Check for GraphQL errors.');
-        this.employees = [];
-      }
-      
-      this.cdr.detectChanges();
-    },
-    error: (err) => {
-      console.error('Connection Error:', err);
-      this.employees = []; 
-    }
-  });
-}
+  ngOnInit(): void {
+    this.loadEmployees();
+  }
 
-deleteEmployee(id: string) {
-  if (confirm('Are you sure you want to delete this employee?')) {
-    this.employeeService.deleteEmployee(id).subscribe({
+  loadEmployees() {
+    this.loading = true;
+    this.employeeService.getEmployees().subscribe({
       next: (result: any) => {
-        console.log('Deleted successfully:', result);
-        
-        this.employees = this.employees.filter(emp => emp.id !== id);
-        
+        const data = result?.data?.getAllEmployees;
+        if (data) {
+          this.employees = [...data];
+          this.error = null;
+        } else {
+          this.employees = [];
+        }
+        this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (err: any) => {
-        console.error('Delete failed:', err);
-        alert('Error deleting: ' + err.message);
+      error: (err) => {
+        console.error('Connection Error:', err);
+        this.error = err.message;
+        this.loading = false;
+        this.employees = []; 
+        this.cdr.detectChanges();
       }
     });
   }
-}
 
-loadEmployees() {
-  this.employeeService.getEmployees().subscribe({
-  next: (result: any) => {
-    if (result && result.data && result.data.getAllEmployees) {
-      this.employees = result.data.getAllEmployees;
-    } else {
-      console.warn("Query ran but returned no employee data.");
-      this.employees = []; 
+  deleteEmployee(id: string) {
+    if (confirm('Are you sure you want to delete this employee?')) {
+      this.employeeService.deleteEmployee(id).subscribe({
+        next: (result: any) => {
+          this.employees = this.employees.filter(emp => emp.id !== id);
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => {
+          console.error('Delete failed:', err);
+          alert('Error deleting: ' + err.message);
+        }
+      });
     }
-  },
-  error: (err) => {
-    console.error("GraphQL Error:", err);
-    this.employees = [];
   }
-});
-}
 }
