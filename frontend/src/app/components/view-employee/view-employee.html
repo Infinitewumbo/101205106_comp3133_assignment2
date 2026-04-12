@@ -1,46 +1,62 @@
-<div class="container mt-5">
-  <div *ngIf="loading" class="text-center">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p>Loading employee data...</p>
-  </div>
-
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-    <button class="btn btn-link" (click)="goBack()">Go Back</button>
-  </div>
-
-  <div *ngIf="!loading && employee" class="card shadow-lg border-0">
-    <div class="card-header bg-dark text-white p-4">
-      <h2 class="mb-0">{{ employee.first_name }} {{ employee.last_name }}</h2>
-      <p class="mb-0 opacity-75">{{ employee.designation }}</p>
+<div class="container mt-5 mb-5">
+  <div class="card shadow border-0 mx-auto" style="max-width: 700px;">
+    
+    <div class="card-header bg-dark text-white text-center py-4">
+      <div class="mb-3 position-relative">
+        <img 
+          [src]="employee?.employee_photo || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" 
+          class="rounded-circle img-thumbnail shadow" 
+          style="width: 160px; height: 160px; object-fit: cover; border: 4px solid #fff;"
+          onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'"
+        >
+      </div>
+      <h2 class="mb-1">{{ employee?.first_name }} {{ employee?.last_name }}</h2>
+      <span class="badge bg-info text-dark px-3 py-2 fs-6">{{ employee?.designation }}</span>
     </div>
+
     <div class="card-body p-4">
-      <div class="row">
-        <div class="col-md-6 mb-4">
-          <label class="text-muted small text-uppercase fw-bold">Email</label>
-          <p class="fs-5">{{ employee.email }}</p>
+      <div class="row g-4">
+        
+        <div class="col-md-6">
+          <label class="text-muted small fw-bold text-uppercase">Email Address</label>
+          <p class="fs-5">{{ employee?.email }}</p>
         </div>
-        <div class="col-md-6 mb-4">
-          <label class="text-muted small text-uppercase fw-bold">Department</label>
-          <p class="fs-5">{{ employee.department }}</p>
+
+        <div class="col-md-6">
+          <label class="text-muted small fw-bold text-uppercase">Gender</label>
+          <p class="fs-5">{{ employee?.gender }}</p>
         </div>
-        <div class="col-md-6 mb-4">
-          <label class="text-muted small text-uppercase fw-bold">Salary</label>
-          <p class="fs-5 text-success">${{ employee.salary | number }}</p>
+
+        <div class="col-md-6">
+          <label class="text-muted small fw-bold text-uppercase">Department</label>
+          <p class="fs-5">{{ employee?.department }}</p>
         </div>
-        <div class="col-md-6 mb-4">
-          <label class="text-muted small text-uppercase fw-bold">Date of Joining</label>
-          <p class="fs-5">{{ employee.date_of_joining }}</p>
+
+        <div class="col-md-6">
+          <label class="text-muted small fw-bold text-uppercase">Date of Joining</label>
+          <p class="fs-5">{{ employee?.date_of_joining }}</p>
         </div>
+
+        <div class="col-md-6">
+          <label class="text-muted small fw-bold text-uppercase">Salary</label>
+          <p class="fs-5 text-success fw-bold">${{ employee?.salary | number }}</p>
+        </div>
+
+        <div class="col-md-6">
+          <label class="text-muted small fw-bold text-uppercase">Employee ID</label>
+          <p class="text-muted small">{{ employee?.id }}</p>
+        </div>
+
       </div>
     </div>
+
     <div class="card-footer bg-light p-3 d-flex justify-content-between">
-      <button class="btn btn-secondary px-4" (click)="goBack()">
-        <i class="bi bi-arrow-left"></i> Back to List
+      <button class="btn btn-secondary px-4" routerLink="/employees">
+        <i class="bi bi-arrow-left"></i> Back
       </button>
-      <a class="btn btn-warning px-4" [routerLink]="['/update-employee', eid]">
-        Edit Details
-      </a>
+      <button class="btn btn-warning px-4" [routerLink]="['/update-employee', employee?.id]">
+        <i class="bi bi-pencil-square"></i> Edit Employee
+      </button>
     </div>
   </div>
 </div>

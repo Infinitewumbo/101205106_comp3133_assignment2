@@ -57,10 +57,11 @@
             <tr *ngFor="let employee of filteredEmployees">
               <td class="ps-4">
                 <img 
-                  [src]="employee.employee_photo || 'https://via.placeholder.com/40'" 
+                  [src]="employee.employee_photo && employee.employee_photo !== '' ? employee.employee_photo : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" 
                   class="rounded-circle border shadow-sm" 
                   style="width: 40px; height: 40px; object-fit: cover;"
-                  onerror="this.src='https://via.placeholder.com/40'"
+                  onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'"
+                  alt="Profile"
                 >
               </td>
               <td class="fw-bold">{{ employee.first_name }}</td>

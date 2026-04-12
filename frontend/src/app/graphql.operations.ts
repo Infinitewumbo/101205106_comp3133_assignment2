@@ -9,6 +9,7 @@ export const GET_ALL_EMPLOYEES = gql`
       email
       designation
       department
+      employee_photo
     }
   }
 `;
@@ -39,7 +40,7 @@ export const ADD_EMPLOYEE = gql`
     $salary: Float!, 
     $department: String!, 
     $date_of_joining: String!,
-    $employee_photo: String # Add this line
+    $employee_photo: String 
   ) {
     addEmployee(
       first_name: $first_name,
@@ -50,7 +51,7 @@ export const ADD_EMPLOYEE = gql`
       salary: $salary,
       department: $department,
       date_of_joining: $date_of_joining,
-      employee_photo: $employee_photo # Add this line
+      employee_photo: $employee_photo 
     ) {
       id
       first_name
