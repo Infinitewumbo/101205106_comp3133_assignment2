@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from '../../services/employee';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './employee-list.html',
   styleUrl: './employee-list.css',
 })
@@ -17,6 +18,15 @@ export class EmployeeList implements OnInit {
     private employeeService: EmployeeService,
     private cdr: ChangeDetectorRef 
   ) {}
+
+  searchTerm: string = '';
+
+  get filteredEmployees() {
+  return this.employees.filter(emp => 
+    emp.designation.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+    emp.department.toLowerCase().includes(this.searchTerm.toLowerCase())
+  );
+}
 
 ngOnInit(): void {
   this.employeeService.getEmployees().subscribe({

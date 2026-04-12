@@ -1,27 +1,69 @@
 <div class="container mt-4">
-  <h2>Employee List</h2>
-  <table class="table table-striped table-bordered mt-3">
-    <thead class="table-dark">
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (emp of employees; track emp.id) {
-        <tr>
-          <td>{{ emp.first_name }}</td>
-          <td>{{ emp.last_name }}</td>
-          <td>{{ emp.email }}</td>
-          <td>
-            <button class="btn btn-info btn-sm me-2" [routerLink]="['/view-employee', emp.id]">View</button>
-            <button class="btn btn-warning btn-sm mx-1" [routerLink]="['/update-employee', emp.id]">Update</button>
-            <button class="btn btn-danger btn-sm" (click)="deleteEmployee(emp.id)">Delete</button>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Employee List</h2>
+    <button class="btn btn-primary" routerLink="/add-employee">
+      <i class="bi bi-plus-circle"></i> Add New Employee
+    </button>
+  </div>
+
+  <div class="mb-4">
+    <div class="input-group shadow-sm">
+      <span class="input-group-text bg-dark text-white">
+        <i class="bi bi-search"></i>
+      </span>
+      <input 
+        type="text" 
+        class="form-control" 
+        placeholder="Filter by Department or Designation (e.g. 'Cyber' or 'Security')..." 
+        [(ngModel)]="searchTerm"
+      >
+    </div>
+    <div class="form-text text-muted" *ngIf="searchTerm">
+      Showing results for: <strong>{{ searchTerm }}</strong>
+    </div>
+  </div>
+
+  <div class="card shadow">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Designation</th> <th>Department</th>  <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let employee of filteredEmployees">
+            <td>{{ employee.first_name }}</td>
+            <td>{{ employee.last_name }}</td>
+            <td>{{ employee.email }}</td>
+            <td>
+              <span class="badge bg-info text-dark">{{ employee.designation }}</span>
+            </td>
+            <td>{{ employee.department }}</td> <td class="text-center">
+              <div class="btn-group">
+                <button class="btn btn-outline-primary btn-sm" [routerLink]="['/view-employee', employee.id]">
+                  View
+                </button>
+                <button class="btn btn-outline-warning btn-sm" [routerLink]="['/update-employee', employee.id]">
+                  Update
+                </button>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteEmployee(employee.id)">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr *ngIf="filteredEmployees.length === 0">
+            <td colspan="6" class="text-center py-4 text-muted">
+              No employees found matching "{{ searchTerm }}"
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
